@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/screen_scroll"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:scrollbars="none">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <com.example.myapplication.ContentColumn
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="620dp"
+            android:layout_gravity="top|center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="22dp"
+            android:paddingEnd="22dp"
+            android:paddingTop="19dp"
+            android:paddingBottom="18dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+            <TextView
+                style="@style/Text.PageTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/academic_information"
+                android:id="@+id/screen_title"
+                android:accessibilityHeading="true" />
+            <TextView
+                style="@style/Text.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/academic_subtitle"
+                android:layout_marginTop="6dp"
+                android:id="@+id/screen_subtitle" />
+            <Space android:layout_width="1dp" android:layout_height="17dp" />
+            <LinearLayout
+                style="@style/Panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/Text.Section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/program_details"
+                    android:accessibilityHeading="true"
+                    android:layout_marginBottom="6dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/academic_fields" />
+            </LinearLayout>
+            <Space android:layout_width="1dp" android:layout_height="12dp" />
+            <LinearLayout
+                style="@style/Panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/Text.Section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/current_enrollment"
+                    android:accessibilityHeading="true"
+                    android:layout_marginBottom="6dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/enrollment_fields" />
+            </LinearLayout>
+        </com.example.myapplication.ContentColumn>
+    </FrameLayout>
+</ScrollView>

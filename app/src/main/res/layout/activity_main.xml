@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/app_root"
+    android:orientation="vertical"
+    android:background="@drawable/bg_window"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/subpage_header"
+        android:visibility="gone"
+        android:clipChildren="false">
+        <com.example.myapplication.ContentColumn
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="620dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/up_button"
+                android:contentDescription="@string/back"
+                android:src="@drawable/ic_back"
+                android:background="@drawable/ripple_action"
+                android:padding="13dp"
+                android:scaleType="centerInside" />
+        </com.example.myapplication.ContentColumn>
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/screen_host"
+        android:layout_weight="1" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nav_container"
+        android:visibility="gone"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp">
+        <com.example.myapplication.ContentColumn
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="584dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:background="@drawable/bg_nav"
+            android:padding="5dp"
+            android:elevation="7dp">
+            <LinearLayout
+                style="@style/DockTab"
+                android:id="@+id/nav_dashboard"
+                android:contentDescription="@string/dashboard">
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/ic_home"
+                    android:importantForAccessibility="no"
+                    app:tint="@color/nav_text"
+                    android:duplicateParentState="true" />
+                <TextView
+                    style="@style/DockLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dashboard"
+                    android:layout_marginTop="4dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </LinearLayout>
+            <LinearLayout
+                style="@style/DockTab"
+                android:id="@+id/nav_directory"
+                android:contentDescription="@string/students">
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/ic_students"
+                    android:importantForAccessibility="no"
+                    app:tint="@color/nav_text"
+                    android:duplicateParentState="true" />
+                <TextView
+                    style="@style/DockLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/students"
+                    android:layout_marginTop="4dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </LinearLayout>
+            <LinearLayout
+                style="@style/DockTab"
+                android:id="@+id/nav_academic"
+                android:contentDescription="@string/academic_tab">
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/ic_book"
+                    android:importantForAccessibility="no"
+                    app:tint="@color/nav_text"
+                    android:duplicateParentState="true" />
+                <TextView
+                    style="@style/DockLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/academic_tab"
+                    android:layout_marginTop="4dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </LinearLayout>
+            <LinearLayout
+                style="@style/DockTab"
+                android:id="@+id/nav_profile"
+                android:contentDescription="@string/profile_tab">
+                <ImageView
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:src="@drawable/ic_person"
+                    android:importantForAccessibility="no"
+                    app:tint="@color/nav_text"
+                    android:duplicateParentState="true" />
+                <TextView
+                    style="@style/DockLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_tab"
+                    android:layout_marginTop="4dp"
+                    android:duplicateParentState="true"
+                    android:importantForAccessibility="no" />
+            </LinearLayout>
+        </com.example.myapplication.ContentColumn>
+    </FrameLayout>
+</LinearLayout>
