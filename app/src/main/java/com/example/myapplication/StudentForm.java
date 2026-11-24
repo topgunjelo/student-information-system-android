@@ -43,6 +43,8 @@ final class StudentForm {
         if (original == null) {
             ((TextView) page.findViewById(R.id.screen_title)).setText(R.string.add_information);
         } else {
+            ((TextView) page.findViewById(R.id.form_password_label)).setText(R.string.new_password);
+            password.setHint(R.string.keep_password_hint);
             username.setText(original.username);
             number.setText(original.number);
             last.setText(original.lastName);
@@ -62,6 +64,16 @@ final class StudentForm {
             }
         }
 
+        String enteredPassword = newPassword();
+        if (original == null && enteredPassword.isEmpty()) {
+            showError(password, R.string.enter_required);
+            return null;
+        }
+        if (!enteredPassword.isEmpty() && enteredPassword.trim().length() < 8) {
+            showError(password, R.string.password_length);
+            return null;
+        }
+
         String unavailable = page.getContext().getString(R.string.not_available);
         return new Student(ScreenFields.input(number), ScreenFields.input(first),
                 ScreenFields.input(middle), ScreenFields.input(last), ScreenFields.input(program),
@@ -70,8 +82,16 @@ final class StudentForm {
                 original == null ? unavailable : original.section, ScreenFields.input(username));
     }
 
+    String newPassword() {
+        return password.getText().toString();
+    }
+
     void showDuplicateNumber() {
         showError(number, R.string.duplicate_number);
+    }
+
+    void showDuplicateUsername() {
+        showError(username, R.string.duplicate_username);
     }
 
     boolean isDirty() {

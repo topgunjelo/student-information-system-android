@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/bg_window" />
     <item>
         <shape>
-            <gradient android:type="radial" android:centerX="0.15" android:centerY="0.93"
-                android:gradientRadius="285dp" android:startColor="#91C2DDFD" android:endColor="#00C2DDFD" />
+            <gradient android:angle="270" android:startColor="#F8FAFD" android:endColor="#EFF2F8" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient
+                android:type="radial"
+                android:centerX="0.94"
+                android:centerY="0.1"
+                android:gradientRadius="310dp"
+                android:startColor="#BACFE6FF"
+                android:endColor="#00CFE6FF" />
         </shape>
     </item>
 </layer-list>

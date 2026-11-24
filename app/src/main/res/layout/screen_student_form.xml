@@ -80,6 +80,7 @@
                         style="@style/Text.Label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:id="@+id/form_password_label"
                         android:text="@string/password"
                         android:labelFor="@id/form_password"
                         android:layout_marginBottom="7dp" />
@@ -87,7 +88,8 @@
                         <EditText
                             style="@style/Input"
                             android:id="@+id/form_password"
-                            android:hint="@string/demo_password_hint"
+                            android:hint="@string/password_length"
+                            android:maxLength="128"
                             android:inputType="textPassword"
                             android:paddingEnd="54dp"
                             android:saveEnabled="false"

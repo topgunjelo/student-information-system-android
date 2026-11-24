@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Student Information System</string>
-    <string name="student_portal">STUDENT PORTAL</string>
     <string name="welcome">Welcome back.</string>
-    <string name="welcome_intro">Sign in to view your student record.</string>
-    <string name="demo_title">Demonstration mode</string>
-    <string name="demo_body">Sign in with sample access. Credentials are optional.</string>
+    <string name="welcome_intro">Sign in to view and update your student record.</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="username_hint">Enter your username</string>
-    <string name="password_hint">Enter your password</string>
+    <string name="username_hint">Enter username</string>
+    <string name="password_hint">Enter password</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>
     <string name="remember_me">Remember Me</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="sign_in">Sign In</string>
-    <string name="forgot_title">Demo sign-in help</string>
-    <string name="forgot_body">Select Sign In to open the sample student record. You can leave both fields blank.</string>
+    <string name="forgot_title">Sign-in Help</string>
+    <string name="forgot_body">Choose Use Sample Account to open the sample record. Accounts created on this device use the password set when they were added.</string>
     <string name="close">Close</string>
     <string name="dashboard">Dashboard</string>
+    <string name="home_tab">Home</string>
     <string name="students">Students</string>
-    <string name="academic_tab">Academic Info</string>
+    <string name="academic_tab">Academics</string>
     <string name="profile_tab">Profile</string>
     <string name="welcome_dashboard">Welcome Back, Student</string>
     <string name="dashboard_term">2026–2027  ·  FIRST SEMESTER</string>
@@ -33,7 +31,7 @@
     <string name="enrollment_overview">Enrollment Overview</string>
     <string name="enrollment_desc">Status and current term</string>
     <string name="account_information">Account Information</string>
-    <string name="account_desc">Demo account and access</string>
+    <string name="account_desc">Username and sign-out</string>
     <string name="student_number">Student Number</string>
     <string name="first_name">First Name</string>
     <string name="middle_name">Middle Name</string>
@@ -59,7 +57,7 @@
     <string name="program_details">Program details</string>
     <string name="current_enrollment">Current enrollment</string>
     <string name="directory">Student Directory</string>
-    <string name="directory_subtitle">Browse and search the sample student records.</string>
+    <string name="directory_subtitle">Find student records saved on this device.</string>
     <string name="search_hint">Search by name, number, or program</string>
     <string name="clear_search">Clear search</string>
     <string name="add_student">Add student</string>
@@ -70,7 +68,7 @@
     <string name="record_caption">Student %1$s</string>
     <string name="edit_information">Edit Student Information</string>
     <string name="add_information">Add Student Information</string>
-    <string name="form_subtitle">Changes apply to this demo session.</string>
+    <string name="form_subtitle">Changes are saved on this device.</string>
     <string name="save_information">Save Information</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
@@ -87,16 +85,27 @@
     <string name="last_name_hint">Enter last name</string>
     <string name="program_hint">Enter the course or program</string>
     <string name="specialization_hint">Enter specialization</string>
-    <string name="dialog_account_info">Username: %1$s\n\nDemo access is active.</string>
+    <string name="dialog_account_info">Username: %1$s\n\nThis account is stored on this device.</string>
     <string name="dialog_enrollment_info">%1$s\n\n%2$s · %3$s\nSection %4$s</string>
     <string name="discard_title">Discard changes?</string>
     <string name="discard_body">Your unsaved changes will be cleared.</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
-    <string name="profile_guest_subtitle">Personal information for this sample student.</string>
+    <string name="profile_guest_subtitle">Personal information for this student.</string>
     <string name="view_student_profile">View profile for %1$s</string>
     <string name="not_available">N/A</string>
-    <string name="demo_password_hint">Enter a demo password (optional)</string>
+    <string name="sample_login">Use Sample Account</string>
+    <string name="forgot_local_body">This app uses on-device accounts. Sign in with the password you set for your account.</string>
+    <string name="new_password">New Password (Optional)</string>
+    <string name="keep_password_hint">Leave blank to keep your password</string>
+    <string name="password_length">Use at least 8 characters.</string>
+    <string name="invalid_credentials">Check your username and password.</string>
+    <string name="duplicate_username">A student with this username already exists.</string>
+    <string name="storage_unavailable">Student records could not be accessed.</string>
+    <string name="operation_failed">Something went wrong. Try again.</string>
+    <string name="signing_in">Signing In…</string>
+    <string name="saving_information">Saving…</string>
+    <string name="welcome_personal">Welcome back, %1$s</string>
     <string-array name="year_levels">
         <item>1st Year</item>
         <item>2nd Year</item>

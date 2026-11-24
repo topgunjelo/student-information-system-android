@@ -25,28 +25,14 @@
             android:paddingBottom="18dp"
             android:clipChildren="false"
             android:clipToPadding="false">
-            <LinearLayout
+            <TextView
+                style="@style/Text.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="21dp">
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/ic_brand"
-                    android:importantForAccessibility="no"
-                    android:background="@drawable/bg_brand"
-                    android:padding="7dp"
-                    android:elevation="4dp" />
-                <TextView
-                    style="@style/Text.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/student_portal"
-                    android:textColor="@color/accent" />
-            </LinearLayout>
+                android:layout_marginBottom="26dp"
+                android:letterSpacing="-0.01"
+                android:text="@string/app_name"
+                android:textSize="16sp" />
             <TextView
                 style="@style/Text.Caption"
                 android:layout_width="match_parent"
@@ -65,20 +51,13 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_hero"
                 android:clipToOutline="true"
-                android:elevation="4dp"
+                android:elevation="2dp"
                 android:layout_marginTop="16dp">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="162dp"
-                    android:src="@drawable/hero_lines"
-                    android:scaleType="fitXY"
-                    android:layout_gravity="top"
-                    android:importantForAccessibility="no" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="17dp">
+                    android:padding="19dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -90,7 +69,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/student_record"
-                            android:textColor="@color/hero_meta" />
+                            android:textColor="@color/muted" />
                         <TextView
                             style="@style/Text.Label"
                             android:layout_width="wrap_content"
@@ -117,7 +96,7 @@
                             android:id="@+id/dashboard_avatar"
                             android:gravity="center"
                             android:background="@drawable/bg_hero_avatar"
-                            android:textColor="@color/white"
+                            android:textColor="@color/accent_dark"
                             android:textSize="18sp"
                             android:fontFamily="sans-serif-medium"
                             android:importantForAccessibility="no"
@@ -132,14 +111,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/dashboard_name"
-                                android:textColor="@color/white"
+                                android:textColor="@color/ink"
                                 android:textSize="21sp" />
                             <TextView
                                 style="@style/Text.Small"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/dashboard_number"
-                                android:textColor="@color/hero_meta"
+                                android:textColor="@color/muted"
                                 android:layout_marginTop="3dp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -148,13 +127,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/dashboard_program"
-                        android:textColor="@color/white"
+                        android:textColor="@color/ink"
                         android:layout_marginTop="11dp"
                         android:textSize="14sp" />
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/hero_line"
+                        android:background="@color/line"
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="11dp"
                         android:importantForAccessibility="no" />
@@ -175,14 +154,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/year_level"
-                                android:textColor="@color/hero_meta"
+                                android:textColor="@color/muted"
                                 android:textSize="12sp" />
                             <TextView
                                 style="@style/Text.Value"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/dashboard_year"
-                                android:textColor="@color/white"
+                                android:textColor="@color/ink"
                                 android:textSize="15sp"
                                 android:layout_marginTop="3dp" />
                         </LinearLayout>
@@ -196,14 +175,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/specialization"
-                                android:textColor="@color/hero_meta"
+                                android:textColor="@color/muted"
                                 android:textSize="12sp" />
                             <TextView
                                 style="@style/Text.Value"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/dashboard_specialization"
-                                android:textColor="@color/white"
+                                android:textColor="@color/ink"
                                 android:textSize="15sp"
                                 android:layout_marginTop="3dp" />
                         </LinearLayout>

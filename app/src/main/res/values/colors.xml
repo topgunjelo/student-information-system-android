@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="canvas">#F3F6FB</color>
-    <color name="ink">#17233A</color>
-    <color name="muted">#52617A</color>
-    <color name="quiet">#596B86</color>
-    <color name="line">#DCE4F1</color>
+    <color name="canvas">#F2F3F7</color>
+    <color name="ink">#1C1C22</color>
+    <color name="muted">#545760</color>
+    <color name="quiet">#606570</color>
+    <color name="line">#DFE2EB</color>
     <color name="white">#FFFFFF</color>
-    <color name="accent">#1455CC</color>
-    <color name="accent_dark">#0D46B2</color>
-    <color name="accent_soft">#E6EEFF</color>
-    <color name="field">#F7F9FE</color>
-    <color name="ripple">#24154FBE</color>
-    <color name="hero_meta">#D6E3FF</color>
-    <color name="hero_line">#5776A5</color>
-    <color name="green_ink">#096048</color>
-    <color name="green_soft">#DEFAEE</color>
-    <color name="violet_ink">#633CAB</color>
-    <color name="violet_soft">#EFE7FE</color>
-    <color name="teal_ink">#07685E</color>
-    <color name="teal_soft">#DDF6F1</color>
-    <color name="amber_ink">#895614</color>
-    <color name="amber_soft">#FFF1DB</color>
+    <color name="accent">#005DBA</color>
+    <color name="accent_dark">#064785</color>
+    <color name="accent_soft">#E0EEFE</color>
+    <color name="field">#F3F4F8</color>
+    <color name="ripple">#240065C8</color>
+    <color name="green_ink">#126249</color>
+    <color name="green_soft">#DEF4E9</color>
+    <color name="violet_ink">#6941AA</color>
+    <color name="violet_soft">#F0EAFE</color>
+    <color name="teal_ink">#09675F</color>
+    <color name="teal_soft">#DDF3EE</color>
+    <color name="amber_ink">#83510E</color>
+    <color name="amber_soft">#FFF0D8</color>
 </resources>

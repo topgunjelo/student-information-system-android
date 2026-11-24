@@ -11,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -28,11 +28,18 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class MainActivity extends AppCompatActivity {
     private static final String REMEMBERED_USERNAME = "remembered_username";
+    private static final ExecutorService PASSWORD_WORKER = Executors.newSingleThreadExecutor();
 
     private enum Screen {
         LOGIN(R.layout.screen_login, R.string.app_name, 0),
@@ -54,32 +61,45 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<Student> students = SampleStudents.create();
+    private LocalAccounts accounts;
+    private StudentStore studentStore;
     private SharedPreferences preferences;
+    private int accountIndex = -1;
+    private boolean storageReady = true;
     private Screen screen = Screen.LOGIN;
     private String detailNumber = "";
     private String directoryQuery = "";
     private int directoryScroll;
     private boolean adding;
+    private Screen formOrigin = Screen.PROFILE;
+    private boolean keyboardVisible;
     private View appRoot;
     private ViewGroup host;
     private View content;
     private StudentForm form;
 
     @Override
-    @SuppressWarnings({"deprecation", "unchecked"})
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        if (state != null) {
-            ArrayList<Student> restored = (ArrayList<Student>) state.getSerializable("students");
-            if (restored != null && !restored.isEmpty()) {
-                students = restored;
+        studentStore = new StudentStore(getSharedPreferences("sis_records", MODE_PRIVATE));
+        try {
+            accounts = studentStore.load();
+        } catch (JSONException | ClassCastException error) {
+            accounts = LocalAccounts.samples();
+            storageReady = false;
+        }
+        if (state != null && storageReady) {
+            accountIndex = state.getInt("accountIndex", -1);
+            if (accountIndex >= 0 && accountIndex < accounts.size()) {
+                screen = Screen.valueOf(state.getString("screen", Screen.LOGIN.name()));
+            } else {
+                accountIndex = -1;
             }
-            screen = Screen.valueOf(state.getString("screen", Screen.LOGIN.name()));
             detailNumber = state.getString("detailNumber", "");
             directoryQuery = state.getString("directoryQuery", "");
             directoryScroll = state.getInt("directoryScroll");
             adding = state.getBoolean("adding");
+            formOrigin = Screen.valueOf(state.getString("formOrigin", Screen.PROFILE.name()));
         }
 
         preferences = getSharedPreferences("sis_demo", MODE_PRIVATE);
@@ -103,6 +123,8 @@ public final class MainActivity extends AppCompatActivity {
                     | WindowInsetsCompat.Type.displayCutout());
             Insets keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
             view.setPadding(safe.left, safe.top, safe.right, Math.max(safe.bottom, keyboard.bottom));
+            keyboardVisible = keyboard.bottom > safe.bottom;
+            updateDock();
             return WindowInsetsCompat.CONSUMED;
         });
         ViewCompat.requestApplyInsets(appRoot);
@@ -126,12 +148,13 @@ public final class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle state) {
         super.onSaveInstanceState(state);
         rememberDirectoryScroll();
-        state.putSerializable("students", students);
+        state.putInt("accountIndex", accountIndex);
         state.putString("screen", screen.name());
         state.putString("detailNumber", detailNumber);
         state.putString("directoryQuery", directoryQuery);
         state.putInt("directoryScroll", directoryScroll);
         state.putBoolean("adding", adding);
+        state.putString("formOrigin", formOrigin.name());
     }
 
     private void navigate(Screen next) {
@@ -163,7 +186,7 @@ public final class MainActivity extends AppCompatActivity {
         appRoot.setBackgroundResource(screen == Screen.LOGIN ? R.drawable.bg_login : R.drawable.bg_window);
         boolean hasUp = screen == Screen.FORM || screen == Screen.STUDENT_DETAIL;
         findViewById(R.id.subpage_header).setVisibility(hasUp ? View.VISIBLE : View.GONE);
-        findViewById(R.id.nav_container).setVisibility(screen.tab == 0 ? View.GONE : View.VISIBLE);
+        updateDock();
         for (Screen destination : Screen.values()) {
             if (destination.tab != 0) {
                 findViewById(destination.tab).setSelected(destination == screen);
@@ -201,6 +224,11 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void updateDock() {
+        boolean showDock = screen.tab != 0 && !keyboardVisible;
+        findViewById(R.id.nav_container).setVisibility(showDock ? View.VISIBLE : View.GONE);
+    }
+
     private void bindLogin() {
         EditText username = content.findViewById(R.id.login_username);
         EditText password = content.findViewById(R.id.login_password);
@@ -209,18 +237,24 @@ public final class MainActivity extends AppCompatActivity {
         username.setText(remembered);
         remember.setChecked(remembered != null);
         ScreenFields.bindPasswordToggle(password, content.findViewById(R.id.login_visibility));
+        Button submit = content.findViewById(R.id.sign_in);
         Runnable signIn = () -> {
-            String entered = ScreenFields.input(username);
-            SharedPreferences.Editor editor = preferences.edit();
-            if (remember.isChecked() && !entered.isEmpty()) {
-                editor.putString(REMEMBERED_USERNAME, entered);
-            } else {
-                editor.remove(REMEMBERED_USERNAME);
+            if (!storageReady) {
+                showMessage(R.string.storage_unavailable);
+                return;
             }
-            editor.apply();
-            navigate(Screen.DASHBOARD);
+            String entered = ScreenFields.input(username);
+            if (entered.isEmpty()) {
+                fieldError(username, R.string.enter_required);
+                return;
+            }
+            if (password.length() == 0) {
+                fieldError(password, R.string.enter_required);
+                return;
+            }
+            submitLogin(submit, password, entered, password.getText().toString(), remember.isChecked());
         };
-        content.findViewById(R.id.sign_in).setOnClickListener(view -> signIn.run());
+        submit.setOnClickListener(view -> signIn.run());
         password.setOnEditorActionListener((view, action, event) -> {
             if (action == EditorInfo.IME_ACTION_DONE) {
                 signIn.run();
@@ -228,13 +262,56 @@ public final class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-        content.findViewById(R.id.forgot_password).setOnClickListener(view ->
-                dialog(R.string.forgot_title, getString(R.string.forgot_body))
-                        .setPositiveButton(R.string.close, null).show());
+
+        boolean sampleAvailable = storageReady && accounts.sampleAccessAvailable();
+        View sample = content.findViewById(R.id.sample_login);
+        sample.setVisibility(sampleAvailable ? View.VISIBLE : View.GONE);
+        Runnable openSample = () -> submitLogin(submit, password, accounts.entry(0).student.username,
+                LocalAccounts.SAMPLE_PASSWORD, null);
+        sample.setOnClickListener(view -> openSample.run());
+        content.findViewById(R.id.forgot_password).setOnClickListener(view -> {
+            MaterialAlertDialogBuilder help = dialog(R.string.forgot_title,
+                    getString(sampleAvailable ? R.string.forgot_body : R.string.forgot_local_body));
+            if (sampleAvailable) {
+                help.setNegativeButton(R.string.close, null)
+                        .setPositiveButton(R.string.sample_login, (dialog, which) -> openSample.run());
+            } else {
+                help.setPositiveButton(R.string.close, null);
+            }
+            help.show();
+        });
+    }
+
+    private void submitLogin(Button submit, EditText passwordField, String entered,
+            String password, Boolean rememberUsername) {
+        LocalAccounts snapshot = accounts;
+        perform(submit, R.string.signing_in, () -> snapshot.authenticate(entered, password), index -> {
+            if (index < 0) {
+                fieldError(passwordField, R.string.invalid_credentials);
+                return;
+            }
+            accountIndex = index;
+            passwordField.getText().clear();
+            if (rememberUsername != null) {
+                SharedPreferences.Editor editor = preferences.edit();
+                if (rememberUsername) {
+                    editor.putString(REMEMBERED_USERNAME, currentStudent().username);
+                } else {
+                    editor.remove(REMEMBERED_USERNAME);
+                }
+                editor.apply();
+            }
+            navigate(Screen.DASHBOARD);
+        });
+    }
+
+    private Student currentStudent() {
+        return accounts.entry(accountIndex).student;
     }
 
     private void bindDashboard() {
-        Student student = students.get(0);
+        Student student = currentStudent();
+        ScreenFields.text(content, R.id.screen_title, getString(R.string.welcome_personal, student.firstName));
         ScreenFields.text(content, R.id.dashboard_avatar, student.initials());
         ScreenFields.text(content, R.id.dashboard_name, student.fullName());
         ScreenFields.text(content, R.id.dashboard_number, getString(R.string.record_caption, student.number));
@@ -251,8 +328,9 @@ public final class MainActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.close, null).show());
         dashboardAction(R.id.open_account, () ->
                 dialog(R.string.account_information, getString(R.string.dialog_account_info, student.username))
+                        .setNeutralButton(R.string.edit_profile, (dialog, which) -> openEditForm())
                         .setNegativeButton(R.string.sign_out, (dialog, which) -> {
-                            students = SampleStudents.create();
+                            accountIndex = -1;
                             detailNumber = "";
                             directoryQuery = "";
                             directoryScroll = 0;
@@ -269,7 +347,8 @@ public final class MainActivity extends AppCompatActivity {
 
     private void bindProfile() {
         boolean isPrimary = screen == Screen.PROFILE;
-        Student student = isPrimary ? students.get(0) : studentForNumber(detailNumber);
+        int detailIndex = isPrimary ? accountIndex : accounts.findNumber(detailNumber);
+        Student student = detailIndex < 0 ? null : accounts.entry(detailIndex).student;
         if (student == null) {
             navigate(Screen.DIRECTORY);
             return;
@@ -289,14 +368,17 @@ public final class MainActivity extends AppCompatActivity {
 
         View edit = content.findViewById(R.id.edit_profile);
         edit.setVisibility(isPrimary ? View.VISIBLE : View.GONE);
-        edit.setOnClickListener(view -> {
-            adding = false;
-            navigate(Screen.FORM);
-        });
+        edit.setOnClickListener(view -> openEditForm());
+    }
+
+    private void openEditForm() {
+        formOrigin = screen;
+        adding = false;
+        navigate(Screen.FORM);
     }
 
     private void bindAcademic() {
-        Student student = students.get(0);
+        Student student = currentStudent();
         LinearLayout fields = content.findViewById(R.id.academic_fields);
         addField(fields, R.string.student_number, student.number);
         addField(fields, R.string.program, student.program);
@@ -358,7 +440,8 @@ public final class MainActivity extends AppCompatActivity {
     private void renderDirectoryResults() {
         LinearLayout list = content.findViewById(R.id.student_list);
         list.removeAllViews();
-        for (Student student : students) {
+        for (int i = 0; i < accounts.size(); i++) {
+            Student student = accounts.entry(i).student;
             if (!student.matches(directoryQuery)) {
                 continue;
             }
@@ -385,41 +468,113 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void bindForm() {
-        form = new StudentForm(content, adding ? null : students.get(0));
+        Student original = adding ? null : currentStudent();
+        form = new StudentForm(content, original);
         content.findViewById(R.id.cancel_form).setOnClickListener(view -> cancelForm());
-        content.findViewById(R.id.save_information).setOnClickListener(view -> {
+        Button save = content.findViewById(R.id.save_information);
+        save.setOnClickListener(view -> {
             Student updated = form.readStudent();
             if (updated == null) {
                 return;
             }
 
-            Student existing = studentForNumber(updated.number);
-            if (existing != null && (adding || existing != students.get(0))) {
+            int index = adding ? -1 : accountIndex;
+            int sameNumber = accounts.findNumber(updated.number);
+            if (sameNumber >= 0 && sameNumber != index) {
                 form.showDuplicateNumber();
                 return;
             }
+            int sameUsername = accounts.findUsername(updated.username);
+            if (sameUsername >= 0 && sameUsername != index) {
+                form.showDuplicateUsername();
+                return;
+            }
 
-            if (adding) {
-                students.add(1, updated);
-                directoryQuery = "";
-                directoryScroll = 0;
-                navigate(Screen.DIRECTORY);
-                Toast.makeText(this, R.string.student_added, Toast.LENGTH_SHORT).show();
+            String password = form.newPassword();
+            if (password.isEmpty()) {
+                saveStudent(index, original, updated, null);
             } else {
-                students.set(0, updated);
-                navigate(Screen.PROFILE);
-                Toast.makeText(this, R.string.edit_saved, Toast.LENGTH_SHORT).show();
+                perform(save, R.string.saving_information, () -> PasswordCredential.create(password),
+                        credential -> saveStudent(index, original, updated, credential));
             }
         });
     }
 
-    private Student studentForNumber(String number) {
-        for (Student student : students) {
-            if (student.number.equalsIgnoreCase(number)) {
-                return student;
-            }
+    private void saveStudent(int index, Student original, Student updated, String credential) {
+        LocalAccounts next = accounts.withSaved(index, updated, credential);
+        try {
+            studentStore.save(next);
+        } catch (JSONException error) {
+            showMessage(R.string.storage_unavailable);
+            return;
         }
-        return null;
+        accounts = next;
+
+        if (index < 0) {
+            detailNumber = updated.number;
+            directoryQuery = "";
+            directoryScroll = 0;
+            navigate(Screen.STUDENT_DETAIL);
+            showMessage(R.string.student_added);
+        } else {
+            String remembered = preferences.getString(REMEMBERED_USERNAME, "");
+            if (original.username.equalsIgnoreCase(remembered)) {
+                preferences.edit().putString(REMEMBERED_USERNAME, updated.username).apply();
+            }
+            navigate(formOrigin);
+            showMessage(R.string.edit_saved);
+        }
+    }
+
+    private <T> void perform(Button action, int progressLabel, Supplier<T> task, Consumer<T> complete) {
+        if (!action.isEnabled()) {
+            return;
+        }
+        hideKeyboard();
+        CharSequence originalLabel = action.getText();
+        action.setText(progressLabel);
+        action.setEnabled(false);
+        PASSWORD_WORKER.execute(() -> {
+            T result;
+            try {
+                result = task.get();
+            } catch (IllegalStateException error) {
+                runOnUiThread(() -> {
+                    if (restoreAction(action, originalLabel)) {
+                        showMessage(R.string.operation_failed);
+                    }
+                });
+                return;
+            }
+            runOnUiThread(() -> {
+                if (restoreAction(action, originalLabel)) {
+                    complete.accept(result);
+                }
+            });
+        });
+    }
+
+    private boolean restoreAction(Button action, CharSequence label) {
+        if (isFinishing() || isDestroyed() || !action.isAttachedToWindow()) {
+            return false;
+        }
+        action.setEnabled(true);
+        action.setText(label);
+        return true;
+    }
+
+    private void fieldError(EditText field, int message) {
+        field.requestFocus();
+        field.setError(getString(message));
+    }
+
+    private void showMessage(int message) {
+        Snackbar snackbar = Snackbar.make(appRoot, message, Snackbar.LENGTH_LONG);
+        View dock = findViewById(R.id.nav_container);
+        if (dock.getVisibility() == View.VISIBLE) {
+            snackbar.setAnchorView(dock);
+        }
+        snackbar.show();
     }
 
     private void goBack() {
@@ -440,7 +595,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void cancelForm() {
-        Runnable leave = () -> navigate(adding ? Screen.DIRECTORY : Screen.PROFILE);
+        Runnable leave = () -> navigate(adding ? Screen.DIRECTORY : formOrigin);
         if (!form.isDirty()) {
             leave.run();
             return;

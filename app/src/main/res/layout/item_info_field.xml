@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <View
+        android:id="@+id/info_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/info_divider"
         android:background="@color/line"
         android:importantForAccessibility="no" />
-    <TextView
-        style="@style/Text.Small"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/info_label"
-        android:layout_marginTop="11dp" />
-    <TextView
-        style="@style/Text.Value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/info_value"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="11dp" />
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="13dp"
+        android:paddingBottom="13dp">
+
+        <TextView
+            android:id="@+id/info_label"
+            style="@style/Text.Body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:paddingEnd="10dp" />
+
+        <TextView
+            android:id="@+id/info_value"
+            style="@style/Text.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="end" />
+    </LinearLayout>
 </LinearLayout>

@@ -58,11 +58,11 @@
             android:baselineAligned="false"
             android:background="@drawable/bg_nav"
             android:padding="5dp"
-            android:elevation="7dp">
+            android:elevation="3dp">
             <LinearLayout
                 style="@style/DockTab"
                 android:id="@+id/nav_dashboard"
-                android:contentDescription="@string/dashboard">
+                android:contentDescription="@string/home_tab">
                 <ImageView
                     android:layout_width="21dp"
                     android:layout_height="21dp"
@@ -74,7 +74,7 @@
                     style="@style/DockLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/dashboard"
+                    android:text="@string/home_tab"
                     android:layout_marginTop="4dp"
                     android:duplicateParentState="true"
                     android:importantForAccessibility="no" />

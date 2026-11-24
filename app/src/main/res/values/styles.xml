@@ -14,15 +14,21 @@
     </style>
 
     <style name="Text.PageTitle">
-        <item name="android:textSize">34sp</item>
+        <item name="android:textSize">@dimen/screen_title_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:letterSpacing">-0.035</item>
     </style>
 
-    <style name="Text.LoginTitle">
-        <item name="android:textSize">34sp</item>
+    <style name="Text.Wordmark">
+        <item name="android:textSize">@dimen/login_wordmark_size</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">-0.038</item>
+        <item name="android:letterSpacing">-0.045</item>
+    </style>
+
+    <style name="Text.LoginTitle">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.028</item>
     </style>
 
     <style name="Text.Section">
@@ -115,7 +121,7 @@
         <item name="android:orientation">vertical</item>
         <item name="android:background">@drawable/bg_glass</item>
         <item name="android:padding">18dp</item>
-        <item name="android:elevation">2dp</item>
+        <item name="android:elevation">1dp</item>
         <item name="android:clipToPadding">false</item>
     </style>
 
@@ -138,7 +144,9 @@
     </style>
 
     <style name="DockLabel">
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
         <item name="android:textColor">@color/nav_text</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:gravity">center</item>

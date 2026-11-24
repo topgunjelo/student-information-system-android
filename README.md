@@ -1,6 +1,6 @@
 # Student Information System
 
-A native Android demo in Java with XML layouts. The student portal includes demo sign-in, a dashboard, student and academic profiles, a searchable directory, and a form for adding or editing student information.
+A native Java and XML student portal with on-device sign-in, a dashboard, student and academic profiles, and a searchable directory.
 
 ## Run in Android Studio
 
@@ -8,7 +8,7 @@ A native Android demo in Java with XML layouts. The student portal includes demo
 2. Let Android Studio sync the Gradle wrapper. Install Android SDK Platform 37 if prompted. The wrapper is configured to use a Java 25 Gradle daemon.
 3. In **Device Manager**, start an Android emulator with API 24 or later.
 4. Choose the **app** run configuration and select **Run**.
-5. On the login screen, select **Sign In** to open Adrian Reyes Santos’s sample dashboard. Both fields are optional.
+5. Select **Use Sample Account** to open Adrian Reyes Santos’s dashboard. The initial sample credentials are `adrian.santos` and `student2026`.
 
 If the emulator stays offline during startup, choose **Cold Boot Now** for that device in Device Manager.
 
@@ -18,7 +18,9 @@ On Windows, the Gradle wrapper can build the APK and run the local tests.
 .\gradlew.bat :app:assembleDebug :app:testDebugUnitTest
 ```
 
-The dashboard’s account card includes a sign-out action. Profile edits and added directory records use in-memory demo data for the current session. **Remember Me** stores only the entered username on this device. Passwords are discarded.
+Student records and profile edits are saved on the device. Assign a username and password when adding a student so they can sign in with their own record. To update your password, open **Edit Profile**. Changing the sample account’s password removes its quick sign-in shortcut.
+
+**Remember Me** saves the username for the next sign-in. Account passwords are stored as salted hashes. Use **Account Information** on the dashboard to sign out.
 
 ## Project layout
 
